@@ -52,3 +52,14 @@ Dieses Framework dient der automatisierten End-to-End-Validierung des **SauceDem
 ```bash
 git clone [https://github.com/abdullahnasre/BeQualified-SauceDemo-Task.git](https://github.com/abdullahnasre/BeQualified-SauceDemo-Task.git)
 cd BeQualified-SauceDemo-Task
+
+2. Abhängigkeiten laden
+Bash
+mvn clean install
+
+3. Tests starten
+Das Framework unterstützt verschiedene Browser-Modi via CLI-Parameter:
+
+Standard (UI-Mode): mvn test -Dbrowser=chrome
+
+Pipeline (Headless): mvn test -Dbrowser=chrome-headless
