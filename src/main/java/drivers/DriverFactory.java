@@ -14,13 +14,12 @@ public class DriverFactory {
     public static WebDriver getNewInstance(String browserName) {
         if (browserName == null) browserName = "chrome";
 
-        // Automatische Headless-Aktivierung für GitHub (Linux)
+        // Erkennt automatisch, ob der Test auf GitHub (Linux) läuft
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("linux") && !browserName.contains("headless")) {
             browserName = "chrome-headless";
         }
 
-        // Variablen müssen vor dem Switch deklariert werden
         ChromeOptions chromeOptions;
         Map<String, Object> prefs;
 
@@ -37,30 +36,17 @@ public class DriverFactory {
             case "firefox":
                 return new FirefoxDriver();
 
-            case "firefox-headless":
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                firefoxOptions.addArguments("--headless");
-                return new FirefoxDriver(firefoxOptions);
-
             case "edge":
                 return new EdgeDriver();
 
-            case "fr":
+            default: // Das wird lokal bei dir in München genutzt
                 chromeOptions = new ChromeOptions();
                 prefs = new HashMap<>();
                 prefs.put("credentials_enable_service", false);
                 prefs.put("profile.password_manager_enabled", false);
-                chromeOptions.addArguments("start-maximized", "--incognito", "--lang=de", "--remote-allow-origins=*");
-                chromeOptions.setExperimentalOption("prefs", prefs);
-                chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-                return new ChromeDriver(chromeOptions);
-
-            default:
-                chromeOptions = new ChromeOptions();
-                prefs = new HashMap<>();
-                prefs.put("credentials_enable_service", false);
-                prefs.put("profile.password_manager_enabled", false);
-                chromeOptions.addArguments("start-maximized", "--incognito", "--remote-allow-origins=*");
+                chromeOptions.addArguments("start-maximized");
+                chromeOptions.addArguments("--incognito");
+                chromeOptions.addArguments("--remote-allow-origins=*");
                 chromeOptions.setExperimentalOption("prefs", prefs);
                 chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
                 return new ChromeDriver(chromeOptions);
