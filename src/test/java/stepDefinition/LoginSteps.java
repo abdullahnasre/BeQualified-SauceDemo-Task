@@ -2,9 +2,13 @@ package stepDefinition;
 
 import io.cucumber.java.en.*;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LoginPage;
 import drivers.DriverHolder;
 import org.testng.Assert;
+
+import java.time.Duration;
 
 public class LoginSteps {
 
@@ -13,7 +17,16 @@ public class LoginSteps {
 
     @Given("user is on the login page")
     public void user_is_on_the_login_page() {
-        Assert.assertEquals(driver.getTitle(), "Swag Labs"); // Optional check
+        // 1. Die URL aufrufen
+        DriverHolder.getDriver().get("https://www.saucedemo.com/");
+
+        // 2. EXPLICIT WAIT: Warte bis zu 10 Sekunden, bis der Titel "Swag Labs" erscheint
+        WebDriverWait wait = new WebDriverWait(DriverHolder.getDriver(), Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.titleIs("Swag Labs"));
+
+        // 3. Jetzt erst die Assertion prüfen (jetzt wird sie erfolgreich sein!)
+        String actualTitle = DriverHolder.getDriver().getTitle();
+        Assert.assertEquals(actualTitle, "Swag Labs");
     }
 
     @When("user enters username {string}")
