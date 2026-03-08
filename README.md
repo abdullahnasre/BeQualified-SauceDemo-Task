@@ -46,17 +46,14 @@ Dieses Framework dient der automatisierten End-to-End-Validierung des **SauceDem
 
 ---
 
-## ⚙️ Installation & Ausführung
-
-### 1. Repository klonen
-```bash
-git clone [https://github.com/abdullahnasre/BeQualified-SauceDemo-Task.git](https://github.com/abdullahnasre/BeQualified-SauceDemo-Task.git)
+⚙️ Installation & Ausführung
+1. Repository klonen
+Bash
+git clone https://github.com/abdullahnasre/BeQualified-SauceDemo-Task.git
 cd BeQualified-SauceDemo-Task
-
 2. Abhängigkeiten laden
 Bash
 mvn clean install
-
 3. Tests starten
 Das Framework unterstützt verschiedene Browser-Modi via CLI-Parameter:
 
