@@ -22,7 +22,8 @@ jobs:
         cache: 'maven'
 
     - name: Tests im Headless-Modus ausführen
-      run: mvn test -Dbrowser=chrome-headless
+      # Wir übergeben zusätzliche Parameter, um Chrome stabil zu halten
+      run: mvn test -Dbrowser=chrome-headless -DargLine="-Dchrome.options='--headless --no-sandbox --disable-dev-shm-usage'"
 
     - name: Test-Report hochladen
       if: always()
