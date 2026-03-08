@@ -14,7 +14,7 @@ public class DriverFactory {
     public static WebDriver getNewInstance(String browserName) {
         if (browserName == null) browserName = "chrome";
 
-        // Erkennt automatisch, ob der Test auf GitHub (Linux) läuft
+        // Erkennt automatisch GitHub Actions (Linux)
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("linux")) {
             browserName = "chrome-headless";
@@ -39,15 +39,12 @@ public class DriverFactory {
             case "edge":
                 return new EdgeDriver();
 
-            default: // Das wird lokal bei dir in München genutzt
+            default: // Für dein Windows in München
                 chromeOptions = new ChromeOptions();
                 prefs = new HashMap<>();
                 prefs.put("credentials_enable_service", false);
                 prefs.put("profile.password_manager_enabled", false);
-
-                chromeOptions.addArguments("start-maximized");
-                chromeOptions.addArguments("--incognito");
-                chromeOptions.addArguments("--remote-allow-origins=*");
+                chromeOptions.addArguments("start-maximized", "--incognito", "--remote-allow-origins=*");
                 chromeOptions.setExperimentalOption("prefs", prefs);
                 chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
                 return new ChromeDriver(chromeOptions);
