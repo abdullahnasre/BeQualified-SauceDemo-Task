@@ -1,5 +1,4 @@
-🚀 SauceDemo Regression Automation Suite
-# ![Tests](https://github.com/abdullahnasre/BeQualified-SauceDemo-Task/actions/workflows/tests.yml/badge.svg) 
+# ![Tests](https://github.com/abdullahnasre/BeQualified-SauceDemo-Task/actions/workflows/tests.yml/badge.svg) 🚀 SauceDemo Regression Automation Suite
 
 ![SauceDemo Test Report](https://b1472923.smushcdn.com/1472923/wp-content/uploads/2018/08/Screen-Shot-2019-10-24-at-8.19.56-AM.png?lossy=0&strip=1&webp=1)
 
