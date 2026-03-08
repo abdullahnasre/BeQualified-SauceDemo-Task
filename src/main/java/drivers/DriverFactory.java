@@ -6,26 +6,31 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class DriverFactory {
 
     public static WebDriver getNewInstance(String browserName) {
+        if (browserName == null) browserName = "chrome";
+
+        // Automatische Headless-Aktivierung für GitHub (Linux)
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("linux") && !browserName.contains("headless")) {
+            browserName = "chrome-headless";
+        }
+
+        // Variablen müssen vor dem Switch deklariert werden
         ChromeOptions chromeOptions;
         Map<String, Object> prefs;
-        DesiredCapabilities capabilities;
 
         switch (browserName.toLowerCase()) {
             case "chrome-headless":
                 chromeOptions = new ChromeOptions();
                 chromeOptions.addArguments("--headless=new");
-                chromeOptions.addArguments("--window-size=1920,1080");
-                chromeOptions.addArguments("--disable-extensions");
                 chromeOptions.addArguments("--no-sandbox");
                 chromeOptions.addArguments("--disable-dev-shm-usage");
+                chromeOptions.addArguments("--window-size=1920,1080");
                 chromeOptions.addArguments("--remote-allow-origins=*");
                 return new ChromeDriver(chromeOptions);
 
@@ -35,23 +40,17 @@ public class DriverFactory {
             case "firefox-headless":
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
                 firefoxOptions.addArguments("--headless");
-                firefoxOptions.addArguments("--width=1920");
-                firefoxOptions.addArguments("--height=1080");
                 return new FirefoxDriver(firefoxOptions);
 
             case "edge":
                 return new EdgeDriver();
 
-            case "fr": // Spezial-Konfiguration (z.B. für deutsche Sprache)
+            case "fr":
                 chromeOptions = new ChromeOptions();
                 prefs = new HashMap<>();
                 prefs.put("credentials_enable_service", false);
                 prefs.put("profile.password_manager_enabled", false);
-
-                chromeOptions.addArguments("start-maximized");
-                chromeOptions.addArguments("--incognito");
-                chromeOptions.addArguments("--remote-allow-origins=*");
-                chromeOptions.addArguments("--lang=de");
+                chromeOptions.addArguments("start-maximized", "--incognito", "--lang=de", "--remote-allow-origins=*");
                 chromeOptions.setExperimentalOption("prefs", prefs);
                 chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
                 return new ChromeDriver(chromeOptions);
@@ -61,10 +60,7 @@ public class DriverFactory {
                 prefs = new HashMap<>();
                 prefs.put("credentials_enable_service", false);
                 prefs.put("profile.password_manager_enabled", false);
-
-                chromeOptions.addArguments("start-maximized");
-                chromeOptions.addArguments("--incognito");
-                chromeOptions.addArguments("--remote-allow-origins=*");
+                chromeOptions.addArguments("start-maximized", "--incognito", "--remote-allow-origins=*");
                 chromeOptions.setExperimentalOption("prefs", prefs);
                 chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
                 return new ChromeDriver(chromeOptions);
