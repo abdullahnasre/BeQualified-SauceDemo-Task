@@ -1,6 +1,7 @@
-# 🚀 SauceDemo Regression Automation Suite
+🚀 SauceDemo Regression Automation Suite
+# ![Tests](https://github.com/abdullahnasre/BeQualified-SauceDemo-Task/actions/workflows/tests.yml/badge.svg) 
 
-![SauceDemo Logo](https://b1472923.smushcdn.com/1472923/wp-content/uploads/2018/08/Screen-Shot-2019-10-24-at-8.19.56-AM.png?lossy=0&strip=1&webp=1)
+![SauceDemo Test Report](https://b1472923.smushcdn.com/1472923/wp-content/uploads/2018/08/Screen-Shot-2019-10-24-at-8.19.56-AM.png?lossy=0&strip=1&webp=1)
 
 ## 📋 Inhaltsverzeichnis
 * [Einführung](#-einführung)
@@ -16,7 +17,7 @@
 Dieses Framework dient der automatisierten End-to-End-Validierung des **SauceDemo** Webshops. Es stellt sicher, dass kritische Geschäftsprozesse – vom Login bis zum erfolgreichen Checkout – stabil und reproduzierbar funktionieren.
 
 **Besonderer Fokus:**
-* Hohe Teststabilität durch **Explicit Waits**.
+* Hohe Teststabilität durch **Explicit Waits** (`WebDriverWait`).
 * Volle CI/CD-Kompatibilität durch optimierte **Headless-Ausführung**.
 
 ---
