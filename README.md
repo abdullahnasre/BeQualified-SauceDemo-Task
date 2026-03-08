@@ -1,70 +1,72 @@
 🚀 SauceDemo Automation Project
 ![SauceDemo Automation Project](https://b1472923.smushcdn.com/1472923/wp-content/uploads/2018/08/Screen-Shot-2019-10-24-at-8.19.56-AM.png?lossy=0&strip=1&webp=1)
-Inhaltsverzeichnis
+Ich habe deine README.md optimiert, um sie noch professioneller zu gestalten. Da du dich bei beQualified bewirbst, habe ich den Fokus auf Qualitätsstandards und Clean Code gelegt.
+
+Hier ist die verbesserte Version (inklusive der Korrektur deines GitHub-Links auf abdullahnasre):
+
+🚀 SauceDemo Regression Automation Suite
+📋 Inhaltsverzeichnis
 Einführung
 
-Features
+Kern-Features
 
-Technologien
-
-Installation
-
-Verwendung
+Technologie-Stack
 
 Projektstruktur
 
-Einführung
-Dieses Projekt dient der automatisierten Qualitätssicherung des SauceDemo-Webshops. Ziel ist es, sicherzustellen, dass kritische Benutzerpfade wie der Login, die Produktauswahl und der Checkout-Prozess fehlerfrei funktionieren. Die Suite wurde so optimiert, dass sie stabil im Headless-Modus läuft.
+Installation & Ausführung
 
-Features
-Sicherer Login: Validierung der Benutzerführung zur Inventar-Seite.
+Reporting
 
-Produkt-Management: Dynamisches Hinzufügen von Produkten zum Warenkorb basierend auf dem Namen.
+📖 Einführung
+Dieses Framework dient der automatisierten End-to-End-Validierung des SauceDemo Webshops. Es stellt sicher, dass kritische Geschäftsprozesse – vom Login bis zum erfolgreichen Checkout – stabil und reproduzierbar funktionieren.
 
-Checkout-Prozess: Validierung des Subtotals und Abschluss des Kaufs.
+Besonderer Fokus: Hohe Teststabilität durch Explicit Waits und volle CI/CD-Kompatibilität durch optimierte Headless-Ausführung.
 
-Sortier-Logik: Überprüfung der Sortierfunktionen nach Preis und Alphabet.
+✨ Kern-Features
+Sicherer Authentifizierungspfad: Validierung des Logins und korrekte Weiterleitung zur Inventar-Seite.
 
-Technologien
-Java 21 & Maven
+Dynamisches Cart-Management: Produkte werden flexibel anhand ihrer Namen identifiziert und dem Warenkorb hinzugefügt.
 
-Selenium WebDriver (Browser-Automatisierung)
+Checkout-Validierung: Automatisierte Prüfung des Subtotals sowie der erfolgreichen Bestellbestätigung.
 
-Cucumber (BDD) & TestNG (Test-Frameworks)
+UI-Sortierprüfung: Verifizierung der Sortierreihenfolge nach Preis (Low/High) und Alphabet (A-Z/Z-A).
 
-Page Object Model (POM) (Architektur)
+🛠 Technologie-Stack
+Sprache: Java 21 & Maven
 
-Installation
-Um die SauceDemo-Automatisierung lokal einzurichten, folge diesen Schritten:
+Browser-Steuerung: Selenium WebDriver
 
-Repository klonen:
+BDD Framework: Cucumber mit Gherkin
 
+Test Runner: TestNG
+
+Design Pattern: Page Object Model (POM)
+
+📁 Projektstruktur
+src/main/java/pages: Page Objects mit stabilen Locators und kapselter Logik.
+
+src/test/java/stepDefinition: Java-Implementierung der BDD-Schritte sowie Hooks (Setup/Teardown).
+
+src/main/resources/Features: Gherkin-Dateien für die fachliche Testbeschreibung.
+
+target/cucumber-reports/: Speicherort für die generierten Testergebnisse.
+
+⚙️ Installation & Ausführung
+1. Repository klonen
 Bash
-git clone https://github.com/abdullahkamel/BeQualified-SauceDemo-Task.git
-In das Projektverzeichnis wechseln:
-
-Bash
+git clone https://github.com/abdullahnasre/BeQualified-SauceDemo-Task.git
 cd BeQualified-SauceDemo-Task
-Abhängigkeiten installieren:
-
+2. Abhängigkeiten laden
 Bash
-mvn install
-Verwendung
-Führe die Tests über das Terminal aus, um die gewünschte Browser-Konfiguration zu nutzen:
+mvn clean install
+3. Tests starten
+Das Framework unterstützt verschiedene Browser-Modi via CLI-Parameter:
 
-Normaler Modus (Chrome):
+Standard (UI-Mode): mvn test -Dbrowser=chrome
 
-Bash
-mvn test -Dbrowser=chrome
-Headless Modus (CI/CD):
+Pipeline (Headless): mvn test -Dbrowser=chrome-headless
 
-Bash
-mvn test -Dbrowser=chrome-headless
-Projektstruktur
-src/main/java/pages: Enthält Page Objects mit stabilen Locators und WebDriverWait.
-
-src/test/java/stepDefinition: Java-Logik hinter den Gherkin-Schritten.
-
-src/main/resources/Features: BDD-Feature-Dateien für die Regressionstests.
-
-target/cucumber-reports/: Speicherort der generierten HTML-Reports nach dem Testlauf.
+📊 Reporting
+Nach jedem Testlauf wird ein detaillierter HTML-Report generiert. Dieser bietet eine visuelle Übersicht über bestandene und fehlgeschlagene Szenarien:
+📍 target/cucumber-reports/regression-report.html
