@@ -16,7 +16,7 @@ public class DriverFactory {
 
         // Erkennt automatisch, ob der Test auf GitHub (Linux) läuft
         String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("linux") && !browserName.contains("headless")) {
+        if (os.contains("linux")) {
             browserName = "chrome-headless";
         }
 
@@ -44,6 +44,7 @@ public class DriverFactory {
                 prefs = new HashMap<>();
                 prefs.put("credentials_enable_service", false);
                 prefs.put("profile.password_manager_enabled", false);
+
                 chromeOptions.addArguments("start-maximized");
                 chromeOptions.addArguments("--incognito");
                 chromeOptions.addArguments("--remote-allow-origins=*");
