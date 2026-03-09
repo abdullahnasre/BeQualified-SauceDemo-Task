@@ -48,14 +48,23 @@ public class Checkout {
     }
 
     /**
-     * Füllt die Checkout-Details aus.
+     * Füllt die Checkout-Details aus und schickt das Formular ab.
      */
     public void enterDetails(String first, String last, String zip) {
-        // Explizites Warten auf das erste Feld des Formulars
-        wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField)).sendKeys(first);
+        // 1. Felder ausfüllen
+        WebElement fName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
+        fName.clear();
+        fName.sendKeys(first);
+
+        driver.findElement(lastNameField).clear();
         driver.findElement(lastNameField).sendKeys(last);
+
+        driver.findElement(zipCodeField).clear();
         driver.findElement(zipCodeField).sendKeys(zip);
-        driver.findElement(continueButton).click();
+
+        // 2. STABILISIERUNG: Klick auf 'Continue' via JavaScript
+        WebElement contBtn = wait.until(ExpectedConditions.elementToBeClickable(continueButton));
+        ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", contBtn);
     }
 
     public void finishCheckout() {
