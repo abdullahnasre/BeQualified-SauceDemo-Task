@@ -49,3 +49,10 @@ Dieses Framework dient der automatisierten End-to-End-Validierung des **SauceDem
 ### 🚀 Installation & Ausführung
 1. `git clone https://github.com/abdullahnasre/BeQualified-SauceDemo-Task.git`
 2. `mvn clean install`
+
+### 📊 Verifizierter Test-Report (CI/CD Proof)
+Die gesamte Regression-Suite wurde erfolgreich in der GitHub Actions Umgebung validiert.
+
+![Regression Report Evidence](regression-report-evidence.png)
+
+> **Ergebnis:** 8 Scenarios Passed (100% Erfolg) unter Linux/Headless.
