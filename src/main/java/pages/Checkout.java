@@ -51,22 +51,30 @@ public class Checkout {
      * Füllt die Checkout-Details mit JavaScript aus, um Cloud-Latenzen zu umgehen.
      */
     public void enterDetails(String first, String last, String zip) {
-        org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
+        // 1. Sicherstellen, dass das Formular da ist
+        WebElement fName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
 
-        // 1. Warten, bis das erste Feld da ist
-        WebElement fName = wait.until(ExpectedConditions.presenceOfElementLocated(firstNameField));
+        // 2. Felder ausfüllen mit einer stabilen Sequenz
+        fName.clear();
+        fName.sendKeys(first);
 
-        // 2. Werte direkt in die Felder setzen (Force Update)
-        js.executeScript("arguments[0].value = '" + first + "';", fName);
-        js.executeScript("document.getElementById('last-name').value = '" + last + "';");
-        js.executeScript("document.getElementById('postal-code').value = '" + zip + "';");
+        WebElement lName = driver.findElement(lastNameField);
+        lName.clear();
+        lName.sendKeys(last);
 
-        // 3. Den Button ebenfalls per JS klicken
-        WebElement contBtn = wait.until(ExpectedConditions.elementToBeClickable(continueButton));
-        js.executeScript("arguments[0].click();", contBtn);
+        WebElement zCode = driver.findElement(zipCodeField);
+        zCode.clear();
+        zCode.sendKeys(zip);
 
-        // 4. Kurzes Warten, damit die Seite Zeit zum Umschalten hat
-        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+        // 3. Formular absenden via ENTER-Taste (oft stabiler als Klick in Linux-Headless)
+        zCode.sendKeys(org.openqa.selenium.Keys.ENTER);
+
+        // 4. Falls ENTER nicht reicht, noch ein JS-Klick-Versuch hinterher
+        try {
+            WebElement contBtn = driver.findElement(continueButton);
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", contBtn);
+        } catch (Exception ignored) {
+        }
     }
 
     public void finishCheckout() {
