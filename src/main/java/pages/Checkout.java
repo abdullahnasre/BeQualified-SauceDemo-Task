@@ -26,8 +26,7 @@ public class Checkout {
     private final By continueButton = By.id("continue");
     private final By finishButton = By.id("finish");
     private final By completeHeader = By.xpath("//h2[@class='complete-header']");
-    private final By subtotalLabel = By.cssSelector("[data-test='subtotal-label']");
-    private final By totalLabel = By.cssSelector("[data-test='total-label']");
+    private final By itemTotalLabel = By.cssSelector("[data-test='subtotal-label']");
 
     // --- Action Methods ---
 
@@ -54,13 +53,13 @@ public class Checkout {
     }
 
     public double getSubtotal() {
-        // Explizites Warten auf das spezifische Subtotal-Element
-        WebElement label = wait.until(ExpectedConditions.visibilityOfElementLocated(subtotalLabel));
-        return extractPrice(label.getText());
-    }
+        // Warten, bis das Label sichtbar ist und Text enthält (image_20bdb1.png)
+        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+        wait.until(d -> d.findElement(itemTotalLabel).getText().contains("$"));
 
-    private double extractPrice(String text) {
-        return Double.parseDouble(text.replaceAll("[^0-9.]", ""));
+        String text = driver.findElement(itemTotalLabel).getText();
+        String cleanValue = text.replaceAll("[^0-9.]", "");
+        return Double.parseDouble(cleanValue);
     }
 
     public void finishCheckout() {
