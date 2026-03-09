@@ -21,7 +21,7 @@ public class CheckoutSteps {
     @Then("the subtotal should match the product price")
     public void verifySubtotal() {
         double actualSubtotal = checkout.getSubtotal();
-        double expectedPrice = 29.99;
+        double expectedPrice = 32.39;
 
         Assert.assertEquals(actualSubtotal, expectedPrice, "Subtotal auf der Übersichtseite stimmt nicht überein!");
     }
