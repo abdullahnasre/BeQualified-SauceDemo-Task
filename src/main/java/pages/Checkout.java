@@ -33,6 +33,8 @@ public class Checkout {
      */
     public void enterDetails(String first, String last, String zip) {
         // TODO: Logging hinzufügen (z.B. log.info("Entering details for: " + first))
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("first-name")));
         driver.findElement(firstNameField).sendKeys(first);
         driver.findElement(lastNameField).sendKeys(last);
         driver.findElement(zipCodeField).sendKeys(zip);
