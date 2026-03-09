@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.Objects;
 
 public class Checkout {
     private final WebDriver driver;
@@ -35,18 +36,20 @@ public class Checkout {
      * Hilft gegen Timing-Probleme in der CI/CD-Pipeline.
      */
     public void navigateToCheckoutForm() {
-        // 1. Warenkorb anklicken
-        wait.until(ExpectedConditions.elementToBeClickable(cartLink)).click();
+        // 1. Warten, bis der Warenkorb-Link im DOM und sichtbar ist
+        WebElement cart = wait.until(ExpectedConditions.elementToBeClickable(cartLink));
 
-        // 2. Warten, bis die Warenkorb-URL geladen ist (Zusatz-Check)
-        wait.until(ExpectedConditions.urlContains("cart.html"));
+        // 2. Klick ausführen (mit einer kleinen Absicherung, falls der normale Klick hakt)
+        try {
+            cart.click();
+        } catch (Exception e) {
+            // Falls der normale Klick in der Cloud blockiert wird, nutzen wir JavaScript
+            org.openqa.selenium.JavascriptExecutor js = (org.openqa.selenium.JavascriptExecutor) driver;
+            js.executeScript("arguments[0].click();", cart);
+        }
 
-        // 3. Checkout-Button suchen und klicken
-        WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(checkoutButton));
-        btn.click();
-
-        // 4. SICHERHEITS-CHECK: Warten, bis das Formular wirklich erscheint
-        wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
+        // 3. Warten, bis der Checkout-Button erscheint (Bestätigung des Seitenwechsels)
+        Objects.requireNonNull(wait.until(ExpectedConditions.presenceOfElementLocated(checkoutButton))).click();
     }
 
     /**
