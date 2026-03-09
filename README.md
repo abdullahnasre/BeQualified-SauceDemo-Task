@@ -8,6 +8,7 @@
 * [Technologie-Stack](#-technologie-stack)
 * [Projektstruktur](#-projektstruktur)
 * [Installation & Ausführung](#-installation--ausführung)
+* 📊 Verifizierter Test-Report (CI/CD Proof) 
 
 ---
 
