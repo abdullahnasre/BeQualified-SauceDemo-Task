@@ -26,7 +26,7 @@ public class Checkout {
     private final By continueButton = By.id("continue");
     private final By finishButton = By.id("finish");
     private final By completeHeader = By.xpath("//h2[@class='complete-header']");
-    private final By itemTotalLabel = By.cssSelector("[data-test='subtotal-label']");
+    private final By itemTotalLabel = By.xpath("//div[@class='summary_subtotal_label']");
 
     // --- Action Methods ---
 
@@ -44,28 +44,20 @@ public class Checkout {
         WebElement fName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
         fName.clear();
         fName.sendKeys(first);
-
         driver.findElement(lastNameField).sendKeys(last);
-        driver.findElement(zipCodeField).sendKeys(zip);
 
-        // OPTIMIERUNG: Explizites Warten auf Klickbarkeit und JS-Executor Fallback
-        WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(continueButton));
-        try {
-            btn.click();
-        } catch (Exception e) {
-            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
-        }
+        WebElement zCode = driver.findElement(zipCodeField);
+        zCode.sendKeys(zip);
+
+        driver.findElement(continueButton).click();
     }
 
     public double getSubtotal() {
-        // OPTIMIERUNG: Nutze presenceOfElementLocated vor visibilityOf für CI-Latenzen
-        wait.until(ExpectedConditions.presenceOfElementLocated(itemTotalLabel));
-        WebElement label = wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+        // Warten, bis das Label sichtbar ist und Text enthält (image_20bdb1.png)
+        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+        wait.until(d -> d.findElement(itemTotalLabel).getText().contains("$"));
 
-        // Sicherstellen, dass der Text geladen ist
-        wait.until(d -> label.getText().contains("$"));
-
-        String text = label.getText();
+        String text = driver.findElement(itemTotalLabel).getText();
         String cleanValue = text.replaceAll("[^0-9.]", "");
         return Double.parseDouble(cleanValue);
     }
