@@ -44,20 +44,34 @@ public class Checkout {
         WebElement fName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
         fName.clear();
         fName.sendKeys(first);
+
         driver.findElement(lastNameField).sendKeys(last);
+        driver.findElement(zipCodeField).sendKeys(zip);
 
-        WebElement zCode = driver.findElement(zipCodeField);
-        zCode.sendKeys(zip);
+        // Klickbarkeit prüfen und Klick ausführen
+        WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(continueButton));
 
-        driver.findElement(continueButton).click();
+        // JS-Fallback für CI-Umgebungen
+        try {
+            btn.click();
+        } catch (Exception e) {
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+        }
+
+        // WICHTIG: Warte explizit darauf, dass die Checkout-Übersicht geladen ist
+        wait.until(ExpectedConditions.presenceOfElementLocated(finishButton));
     }
 
     public double getSubtotal() {
-        // Warten, bis das Label sichtbar ist und Text enthält (image_20bdb1.png)
-        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
-        wait.until(d -> d.findElement(itemTotalLabel).getText().contains("$"));
+        // Nutze das stabilere data-test Attribut aus deinen DOM-Screenshots
+        By subtotalLocator = By.cssSelector("[data-test='subtotal-label']");
 
-        String text = driver.findElement(itemTotalLabel).getText();
+        WebElement label = wait.until(ExpectedConditions.visibilityOfElementLocated(subtotalLocator));
+
+        // Sicherstellen, dass der Text (Preis) geladen wurde
+        wait.until(d -> label.getText().contains("$"));
+
+        String text = label.getText();
         String cleanValue = text.replaceAll("[^0-9.]", "");
         return Double.parseDouble(cleanValue);
     }
