@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
 
 public class Checkout {
@@ -26,7 +25,7 @@ public class Checkout {
     private final By continueButton = By.id("continue");
     private final By finishButton = By.id("finish");
     private final By completeHeader = By.xpath("//h2[@class='complete-header']");
-    private final By itemTotalLabel = By.xpath("//div[contains(@class, 'summary_subtotal_label')]");
+    private final By itemTotalLabel = By.cssSelector("[data-test='subtotal-label']");
 
     // --- Action Methods ---
 
@@ -44,20 +43,24 @@ public class Checkout {
         WebElement fName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
         fName.clear();
         fName.sendKeys(first);
-
-        driver.findElement(lastNameField).clear();
         driver.findElement(lastNameField).sendKeys(last);
 
         WebElement zCode = driver.findElement(zipCodeField);
-        zCode.clear();
         zCode.sendKeys(zip);
 
+        // Absenden und auf Seitenwechsel warten (image_20bd5a.png)
         zCode.sendKeys(org.openqa.selenium.Keys.ENTER);
-        try {
-            WebElement contBtn = driver.findElement(continueButton);
-            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", contBtn);
-        } catch (Exception ignored) {
-        }
+        wait.until(ExpectedConditions.urlContains("checkout-step-two.html"));
+    }
+
+    public double getSubtotal() {
+        // Warten, bis das Label sichtbar ist und Text enthält (image_20bdb1.png)
+        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+        wait.until(d -> d.findElement(itemTotalLabel).getText().contains("$"));
+
+        String text = driver.findElement(itemTotalLabel).getText();
+        String cleanValue = text.replaceAll("[^0-9.]", "");
+        return Double.parseDouble(cleanValue);
     }
 
     public void finishCheckout() {
@@ -66,20 +69,5 @@ public class Checkout {
 
     public String getConfirmationMessage() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(completeHeader)).getText();
-    }
-
-    public double getSubtotal() {
-        // Wir warten explizit darauf, dass das Element sichtbar ist UND Text enthält
-        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
-
-        // Fluent Wait: Wir warten dynamisch, bis der Text ein "$" enthält (Rendering-Check)
-        wait.until(driver -> {
-            String text = driver.findElement(itemTotalLabel).getText();
-            return text.contains("$");
-        });
-
-        String text = driver.findElement(itemTotalLabel).getText();
-        String cleanValue = text.replaceAll("[^0-9.]", "");
-        return Double.parseDouble(cleanValue);
     }
 }
