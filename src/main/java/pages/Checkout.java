@@ -14,7 +14,6 @@ public class Checkout {
 
     public Checkout(WebDriver driver) {
         this.driver = driver;
-        // Standard-Wait für normale Operationen
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
@@ -36,8 +35,18 @@ public class Checkout {
      * Hilft gegen Timing-Probleme in der CI/CD-Pipeline.
      */
     public void navigateToCheckoutForm() {
+        // 1. Warenkorb anklicken
         wait.until(ExpectedConditions.elementToBeClickable(cartLink)).click();
-        wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)).click();
+
+        // 2. Warten, bis die Warenkorb-URL geladen ist (Zusatz-Check)
+        wait.until(ExpectedConditions.urlContains("cart.html"));
+
+        // 3. Checkout-Button suchen und klicken
+        WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(checkoutButton));
+        btn.click();
+
+        // 4. SICHERHEITS-CHECK: Warten, bis das Formular wirklich erscheint
+        wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
     }
 
     /**

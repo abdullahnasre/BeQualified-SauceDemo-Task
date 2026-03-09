@@ -15,7 +15,7 @@ public class ProductPage {
     }
 
     // --- Locators ---
-    // TODO: Evaluieren, ob CSS-Selectoren für die Performance vorteilhafter sind
+    // TODO: Evaluieren, ob CSS-Selector für die Performance vorteilhafter sind
     private final By shoppingCartBadge = By.className("shopping_cart_badge");
     private final By productSortContainer = By.className("product_sort_container");
 

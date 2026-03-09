@@ -13,7 +13,6 @@ public class LoginPage {
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        // Zentraler Wait für stabile Interaktionen
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
