@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
 
 public class Checkout {
@@ -14,10 +13,13 @@ public class Checkout {
 
     public Checkout(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // Standard-Wait für normale Operationen
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
     // --- Locators ---
+    private final By cartLink = By.className("shopping_cart_link");
+    private final By checkoutButton = By.id("checkout");
     private final By firstNameField = By.id("first-name");
     private final By lastNameField = By.id("last-name");
     private final By zipCodeField = By.id("postal-code");
@@ -29,49 +31,37 @@ public class Checkout {
     // --- Action Methods ---
 
     /**
-     * Füllt die Checkout-Details aus und navigiert zur Übersicht.
+     * Navigiert zum Warenkorb und klickt auf Checkout.
+     * Hilft gegen Timing-Probleme in der CI/CD-Pipeline.
+     */
+    public void navigateToCheckoutForm() {
+        wait.until(ExpectedConditions.elementToBeClickable(cartLink)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)).click();
+    }
+
+    /**
+     * Füllt die Checkout-Details aus.
      */
     public void enterDetails(String first, String last, String zip) {
-        // TODO: Logging hinzufügen (z.B. log.info("Entering details for: " + first))
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("first-name")));
-        driver.findElement(firstNameField).sendKeys(first);
+        // Explizites Warten auf das erste Feld des Formulars
+        wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField)).sendKeys(first);
         driver.findElement(lastNameField).sendKeys(last);
         driver.findElement(zipCodeField).sendKeys(zip);
         driver.findElement(continueButton).click();
     }
 
-    /**
-     * Schließt den Kauf ab. Wartet, bis der Button im Headless-Modus klickbar ist.
-     */
     public void finishCheckout() {
-        // TODO: Überprüfen, ob wir uns auf der richtigen URL befinden (Step Two)
         wait.until(ExpectedConditions.elementToBeClickable(finishButton)).click();
     }
 
-    /**
-     * Holt die Bestätigungsnachricht nach dem Kauf.
-     */
     public String getConfirmationMessage() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(completeHeader)).getText();
     }
 
-    /**
-     * Extrahiert den Subtotal-Wert aus der Übersicht.
-     */
     public double getSubtotal() {
-        // Warten auf Sichtbarkeit des Preises
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
-
         String text = element.getText();
-        // Regex entfernt alles außer Zahlen und Punkt
         String cleanValue = text.replaceAll("[^0-9.]", "");
-
-        if (cleanValue.isEmpty()) {
-            // TODO: Custom Error Handling statt RuntimeException nutzen
-            throw new RuntimeException("Preis-Parsing fehlgeschlagen für Text: " + text);
-        }
-
         return Double.parseDouble(cleanValue);
     }
 }
