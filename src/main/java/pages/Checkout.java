@@ -44,20 +44,28 @@ public class Checkout {
         WebElement fName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
         fName.clear();
         fName.sendKeys(first);
-        driver.findElement(lastNameField).sendKeys(last);
 
-        WebElement zCode = driver.findElement(zipCodeField);
-        zCode.sendKeys(zip);
-        
-        driver.findElement(continueButton).click();
+        driver.findElement(lastNameField).sendKeys(last);
+        driver.findElement(zipCodeField).sendKeys(zip);
+
+        // OPTIMIERUNG: Explizites Warten auf Klickbarkeit und JS-Executor Fallback
+        WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(continueButton));
+        try {
+            btn.click();
+        } catch (Exception e) {
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+        }
     }
 
     public double getSubtotal() {
-        // Warten, bis das Label sichtbar ist und Text enthält (image_20bdb1.png)
-        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
-        wait.until(d -> d.findElement(itemTotalLabel).getText().contains("$"));
+        // OPTIMIERUNG: Nutze presenceOfElementLocated vor visibilityOf für CI-Latenzen
+        wait.until(ExpectedConditions.presenceOfElementLocated(itemTotalLabel));
+        WebElement label = wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
 
-        String text = driver.findElement(itemTotalLabel).getText();
+        // Sicherstellen, dass der Text geladen ist
+        wait.until(d -> label.getText().contains("$"));
+
+        String text = label.getText();
         String cleanValue = text.replaceAll("[^0-9.]", "");
         return Double.parseDouble(cleanValue);
     }
