@@ -26,7 +26,7 @@ public class Checkout {
     private final By continueButton = By.id("continue");
     private final By finishButton = By.id("finish");
     private final By completeHeader = By.xpath("//h2[@class='complete-header']");
-    private final By itemTotalLabel = By.cssSelector("[data-test='total-label']");
+    private final By itemTotalLabel = By.cssSelector("[data-test='subtotal-label']");
 
     // --- Action Methods ---
 
