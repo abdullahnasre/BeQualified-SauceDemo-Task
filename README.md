@@ -8,7 +8,6 @@
 * [Technologie-Stack](#-technologie-stack)
 * [Projektstruktur](#-projektstruktur)
 * [Installation & Ausführung](#-installation--ausführung)
-* [Reporting](#-reporting)
 
 ---
 
