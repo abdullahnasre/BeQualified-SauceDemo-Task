@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 
 public class Checkout {
@@ -31,7 +32,7 @@ public class Checkout {
     // --- Action Methods ---
 
     /**
-     * Navigiert zum Warenkorb und klickt auf Checkout.
+     * Navigiert zum Warenkorb und klickt auf Check-out.
      * Hilft gegen Timing-Probleme in der CI/CD-Pipeline.
      */
     public void navigateToCheckoutForm() {

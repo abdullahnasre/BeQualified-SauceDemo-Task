@@ -18,7 +18,7 @@ public class ProductSteps {
         String url = Utility.getProperty("url");
         DriverHolder.getDriver().get(url);
 
-        // 2. Login ausführen mit den Parametern aus der Feature-Datei
+        // 2. Log-ins ausführen mit den Parametern aus der Feature-Datei
         loginPage.enterUsername(username);
         loginPage.enterPassword(password);
         loginPage.clickLogin();

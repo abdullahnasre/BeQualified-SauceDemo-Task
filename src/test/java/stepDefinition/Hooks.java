@@ -13,18 +13,6 @@ import static drivers.DriverHolder.driver;
 
 public class Hooks {
 
-//    @Before
-//    public void setupDriver() {
-//        String url = Utility.getProperty("url");
-//        WebDriver driver = DriverFactory.getNewInstance("chrome");
-//        DriverHolder.setDriver(driver);
-//
-//        driver.manage().window().maximize();
-//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-//        driver.manage().deleteAllCookies();
-//        driver.get(url);
-//    }
-
     @Before
     public void setupDriver() {
         String browser = System.getProperty("browser", "chrome");

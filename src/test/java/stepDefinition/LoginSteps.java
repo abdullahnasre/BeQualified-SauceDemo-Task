@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LoginPage;
 import drivers.DriverHolder;
 import org.testng.Assert;
+import util.Utility;
 
 import java.time.Duration;
 
@@ -17,8 +18,9 @@ public class LoginSteps {
 
     @Given("user is on the login page")
     public void user_is_on_the_login_page() {
-        // 1. Die URL aufrufen
-        DriverHolder.getDriver().get("https://www.saucedemo.com/");
+        // 1. URL laden (Nutze deine Utility-Klasse)
+        String url = Utility.getProperty("url");
+        DriverHolder.getDriver().get(url);
 
         // 2. EXPLICIT WAIT: Warte bis zu 10 Sekunden, bis der Titel "Swag Labs" erscheint
         WebDriverWait wait = new WebDriverWait(DriverHolder.getDriver(), Duration.ofSeconds(10));
