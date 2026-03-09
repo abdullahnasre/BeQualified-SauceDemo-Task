@@ -86,8 +86,24 @@ public class Checkout {
     }
 
     public double getSubtotal() {
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+        // 1. Expliziter Wait: Wir geben der Seite bis zu 20 Sekunden
+        WebDriverWait longWait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+        // 2. Wir warten nicht nur auf die Präsenz, sondern auf die Sichtbarkeit
+        WebElement element = longWait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+
+        // 3. Sicherheits-Check: Text abrufen und säubern
         String text = element.getText();
+
+        // Falls der Text noch leer ist (wegen Rendering), kurz warten
+        if (text.isEmpty()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
+            text = element.getText();
+        }
+
         String cleanValue = text.replaceAll("[^0-9.]", "");
         return Double.parseDouble(cleanValue);
     }
