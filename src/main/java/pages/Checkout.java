@@ -14,7 +14,7 @@ public class Checkout {
 
     public Checkout(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     // --- Locators ---
@@ -26,50 +26,33 @@ public class Checkout {
     private final By continueButton = By.id("continue");
     private final By finishButton = By.id("finish");
     private final By completeHeader = By.xpath("//h2[@class='complete-header']");
-    private final By itemTotalLabel = By.className("summary_subtotal_label");
+    private final By itemTotalLabel = By.xpath("//div[contains(@class, 'summary_subtotal_label')]");
 
     // --- Action Methods ---
 
-    /**
-     * Navigiert zum Warenkorb und klickt auf Check-out.
-     * Nutzt JavaScript-Klicks für maximale Stabilität in der CI/CD-Pipeline.
-     */
     public void navigateToCheckoutForm() {
-        // 1. Warenkorb-Link suchen und per JavaScript klicken (umgeht Interaktionsfehler)
         WebElement cart = wait.until(ExpectedConditions.elementToBeClickable(cartLink));
         ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", cart);
 
-        // 2. Checkout-Button suchen und ebenfalls per JavaScript klicken
         WebElement btn = wait.until(ExpectedConditions.presenceOfElementLocated(checkoutButton));
         ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
 
-        // 3. Warten, bis das Formular wirklich geladen ist
         wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
     }
 
-    /**
-     * Füllt die Checkout-Details mit JavaScript aus, um Cloud-Latenzen zu umgehen.
-     */
     public void enterDetails(String first, String last, String zip) {
-        // 1. Sicherstellen, dass das Formular da ist
         WebElement fName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
-
-        // 2. Felder ausfüllen mit einer stabilen Sequenz
         fName.clear();
         fName.sendKeys(first);
 
-        WebElement lName = driver.findElement(lastNameField);
-        lName.clear();
-        lName.sendKeys(last);
+        driver.findElement(lastNameField).clear();
+        driver.findElement(lastNameField).sendKeys(last);
 
         WebElement zCode = driver.findElement(zipCodeField);
         zCode.clear();
         zCode.sendKeys(zip);
 
-        // 3. Formular absenden via ENTER-Taste (oft stabiler als Klick in Linux-Headless)
         zCode.sendKeys(org.openqa.selenium.Keys.ENTER);
-
-        // 4. Falls ENTER nicht reicht, noch ein JS-Klick-Versuch hinterher
         try {
             WebElement contBtn = driver.findElement(continueButton);
             ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", contBtn);
@@ -86,24 +69,16 @@ public class Checkout {
     }
 
     public double getSubtotal() {
-        // 1. Expliziter Wait: Wir geben der Seite bis zu 20 Sekunden
-        WebDriverWait longWait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        // Wir warten explizit darauf, dass das Element sichtbar ist UND Text enthält
+        wait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
 
-        // 2. Wir warten nicht nur auf die Präsenz, sondern auf die Sichtbarkeit
-        WebElement element = longWait.until(ExpectedConditions.visibilityOfElementLocated(itemTotalLabel));
+        // Fluent Wait: Wir warten dynamisch, bis der Text ein "$" enthält (Rendering-Check)
+        wait.until(driver -> {
+            String text = driver.findElement(itemTotalLabel).getText();
+            return text.contains("$");
+        });
 
-        // 3. Sicherheits-Check: Text abrufen und säubern
-        String text = element.getText();
-
-        // Falls der Text noch leer ist (wegen Rendering), kurz warten
-        if (text.isEmpty()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
-            }
-            text = element.getText();
-        }
-
+        String text = driver.findElement(itemTotalLabel).getText();
         String cleanValue = text.replaceAll("[^0-9.]", "");
         return Double.parseDouble(cleanValue);
     }
