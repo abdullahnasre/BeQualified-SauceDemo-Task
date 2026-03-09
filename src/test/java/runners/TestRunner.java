@@ -7,7 +7,7 @@ import io.cucumber.testng.CucumberOptions;
         glue = "stepDefinition",                // Paketname deiner Steps und Hooks
         plugin = {
                 "pretty",
-                "html:target/cucumber-reports/regression-report.html", // Erzeugt den geforderten HTML Report
+                "html:target/cucumber-reports/regression-report.html",
                 "json:target/cucumber-reports/cucumber.json"
         },
         tags = "@RegressionTest", // Führt nur Szenarien mit diesem Tag aus

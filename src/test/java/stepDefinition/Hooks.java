@@ -33,7 +33,7 @@ public class Hooks {
         WebDriver webDriver = DriverFactory.getNewInstance(browser);
 
         // 2. WICHTIG: Nutze direkt den webDriver für Einstellungen (behebt ThreadLocal Fehler)
-        webDriver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(10));
+        webDriver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(15));
         webDriver.manage().timeouts().pageLoadTimeout(java.time.Duration.ofSeconds(20));
 
         // 3. Speichere die Instanz im DriverHolder
