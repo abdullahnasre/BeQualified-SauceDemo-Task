@@ -1,10 +1,14 @@
 package stepDefinition;
 
 import io.cucumber.java.en.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import pages.Checkout;
 import drivers.DriverHolder;
 import org.openqa.selenium.By;
+
+import java.time.Duration;
 
 public class CheckoutSteps {
     // Initialisierung der Page mit dem aktuellen Driver
@@ -14,10 +18,15 @@ public class CheckoutSteps {
     public void user_proceeds_to_checkout_and_enters(String first, String last, String zip) {
         // Navigation zum Checkout
         // TODO: Navigation in eine eigene Methode in der CartPage auslagern
-        DriverHolder.getDriver().findElement(By.className("shopping_cart_link")).click();
-        DriverHolder.getDriver().findElement(By.id("checkout")).click();
+        WebDriverWait wait = new WebDriverWait(DriverHolder.getDriver(), Duration.ofSeconds(30));
 
-        // Details eingeben (CheckoutStepOne -> CheckoutStepTwo)
+        // 1. Klick auf den Warenkorb (mit Wait)
+        wait.until(ExpectedConditions.elementToBeClickable(By.className("shopping_cart_link"))).click();
+
+        // 2. Klick auf 'Check' (HIER lag der Fehler!)
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("checkout"))).click();
+
+        // 3. Details eingeben
         checkout.enterDetails(first, last, zip);
     }
 
