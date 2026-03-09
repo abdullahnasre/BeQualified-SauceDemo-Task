@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 
 public class Checkout {
@@ -47,10 +48,8 @@ public class Checkout {
 
         WebElement zCode = driver.findElement(zipCodeField);
         zCode.sendKeys(zip);
-
-        // Absenden und auf Seitenwechsel warten (image_20bd5a.png)
-        zCode.sendKeys(org.openqa.selenium.Keys.ENTER);
-        wait.until(ExpectedConditions.urlContains("checkout-step-two.html"));
+        
+        driver.findElement(continueButton).click();
     }
 
     public double getSubtotal() {
