@@ -26,7 +26,8 @@ public class Checkout {
     private final By continueButton = By.id("continue");
     private final By finishButton = By.id("finish");
     private final By completeHeader = By.xpath("//h2[@class='complete-header']");
-    private final By itemTotalLabel = By.xpath("//div[@class='summary_total_label']");
+    private final By subtotalLabel = By.cssSelector("[data-test='subtotal-label']");
+    private final By totalLabel = By.cssSelector("[data-test='total-label']");
 
     // --- Action Methods ---
 
@@ -44,36 +45,22 @@ public class Checkout {
         WebElement fName = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameField));
         fName.clear();
         fName.sendKeys(first);
-
         driver.findElement(lastNameField).sendKeys(last);
-        driver.findElement(zipCodeField).sendKeys(zip);
 
-        // Klickbarkeit prüfen und Klick ausführen
-        WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(continueButton));
+        WebElement zCode = driver.findElement(zipCodeField);
+        zCode.sendKeys(zip);
 
-        // JS-Fallback für CI-Umgebungen
-        try {
-            btn.click();
-        } catch (Exception e) {
-            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
-        }
-
-        // WICHTIG: Warte explizit darauf, dass die Checkout-Übersicht geladen ist
-        wait.until(ExpectedConditions.presenceOfElementLocated(finishButton));
+        driver.findElement(continueButton).click();
     }
 
     public double getSubtotal() {
-        // Nutze das stabilere data-test Attribut aus deinen DOM-Screenshots
-        By subtotalLocator = By.cssSelector("[data-test='subtotal-label']");
+        // Explizites Warten auf das spezifische Subtotal-Element
+        WebElement label = wait.until(ExpectedConditions.visibilityOfElementLocated(subtotalLabel));
+        return extractPrice(label.getText());
+    }
 
-        WebElement label = wait.until(ExpectedConditions.visibilityOfElementLocated(subtotalLocator));
-
-        // Sicherstellen, dass der Text (Preis) geladen wurde
-        wait.until(d -> label.getText().contains("$"));
-
-        String text = label.getText();
-        String cleanValue = text.replaceAll("[^0-9.]", "");
-        return Double.parseDouble(cleanValue);
+    private double extractPrice(String text) {
+        return Double.parseDouble(text.replaceAll("[^0-9.]", ""));
     }
 
     public void finishCheckout() {
